@@ -146,6 +146,41 @@ def get_teachers():
 @app.route('/api/v1/disciplines', methods=['GET'])
 def get_disciplines():
     user_id = request.args.get('user_id')
+    if user_id is None:
+        request_template = f"""
+            SELECT 
+                discipline_id,
+                discipline_name,
+                teacher_full_name
+            FROM discipline
+                JOIN teacher_discipline USING (discipline_id)
+                JOIN teacher USING (teacher_id)
+        """
+        return get_from_database(request_template)
+    else:
+        request_template = f"""
+            SELECT 
+                discipline_id,
+                discipline_name,
+                teacher_full_name
+            FROM discipline
+                JOIN teacher_discipline USING (discipline_id)
+                JOIN teacher USING (teacher_id)
+                JOIN users USING (teacher_id)
+            WHERE discipline_name IN (SELECT 
+                discipline_name
+            FROM discipline
+                JOIN teacher_discipline USING (discipline_id)
+                JOIN teacher USING (teacher_id)
+                JOIN users USING (teacher_id)
+            WHERE user_id={user_id})
+        """
+        return get_from_database(request_template)
+
+
+@app.route('/api/v1/student_disciplines', methods=['GET'])
+def get_student_disciplines():
+    user_id = request.args.get('user_id')
     request_template = f"""
         SELECT 
             discipline_id,

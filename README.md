@@ -27,3 +27,7 @@
   По желанию можно добавить флаг -d для запуска в фоновом режиме: ```docker-compose up -d```
   - ```docker-compose down``` - выключить контейнеры
   - ```docker-compose restart``` - перезапустить контейнеры
+7. Запуск Flask приложения:
+- ```python app.py```
+8. Swagger
+- http://localhost:5000/swagger/
